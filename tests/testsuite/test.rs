@@ -2597,66 +2597,6 @@ fn doctest_dep() {
 }
 
 #[cargo_test]
-fn registry_dep_new_layout() {
-    Package::new("baz", "0.1.0")
-        .file("src/lib.rs", "pub fn get_a_byte() -> u8 { 5 }")
-        .publish();
-    Package::new("bar", "0.1.0")
-        .dep("baz", "0.1")
-        .file("src/lib.rs", "pub fn get_a_byte() -> u8 { baz::get_a_byte() }")
-        .publish();
-    let p = project()
-        .file(
-            "Cargo.toml",
-            r#"
-                [package]
-                name = "foo"
-                version = "0.0.1"
-                edition = "2015"
-                authors = []
-
-                [dependencies]
-                bar = "0.1"
-            "#,
-        )
-        .file(
-            "src/lib.rs",
-            r#"
-                /// ```
-                /// foo::foo();
-                /// ```
-                pub fn foo() -> u8 {
-                    bar::get_a_byte()
-                }
-
-                #[test]
-                fn it_works() {
-                    assert_eq!(foo(), bar::get_a_byte());
-                }
-            "#,
-        )
-        .file(
-            ".cargo/config.toml",
-            &format!(
-                r#"
-                [build]
-                build-dir = "{}"
-                "#,
-                "a".repeat(350)
-            ),
-        )
-        .build();
-
-    p.cargo("-Zbuild-dir-new-layout build")
-        .masquerade_as_nightly_cargo(&["new build-dir layout"])
-        .run();
-
-    p.cargo("-Zbuild-dir-new-layout test")
-        .masquerade_as_nightly_cargo(&["new build-dir layout"])
-        .run();
-}
-
-#[cargo_test]
 fn doctest_dep_new_layout() {
     let p = project()
         .file(
