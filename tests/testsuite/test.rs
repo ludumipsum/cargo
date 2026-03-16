@@ -2598,7 +2598,13 @@ fn doctest_dep() {
 
 #[cargo_test]
 fn registry_dep_new_layout() {
-    Package::new("bar", "0.1.0").file("src/lib.rs", "pub fn get_a_byte() -> u8 { 5 }").publish();
+    Package::new("baz", "0.1.0")
+        .file("src/lib.rs", "pub fn get_a_byte() -> u8 { 5 }")
+        .publish();
+    Package::new("bar", "0.1.0")
+        .dep("baz", "0.1")
+        .file("src/lib.rs", "pub fn get_a_byte() -> u8 { baz::get_a_byte() }")
+        .publish();
     let p = project()
         .file(
             "Cargo.toml",
