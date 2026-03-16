@@ -2642,7 +2642,7 @@ fn registry_dep_new_layout() {
                 [build]
                 build-dir = "{}"
                 "#,
-                "a".repeat(150)
+                "a".repeat(350)
             ),
         )
         .build();
