@@ -246,7 +246,7 @@ impl<'a, 'gctx: 'a> CompilationFiles<'a, 'gctx> {
     /// taken in those cases!
     fn pkg_dir(&self, unit: &Unit) -> String {
         let separator = match self.ws.gctx().cli_unstable().build_dir_new_layout {
-            true => "/",
+            true => std::path::MAIN_SEPARATOR_STR,
             false => "-",
         };
         let name = unit.pkg.package_id().name();
