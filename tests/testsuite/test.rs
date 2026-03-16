@@ -2635,6 +2635,16 @@ fn registry_dep_new_layout() {
                 }
             "#,
         )
+        .file(
+            ".cargo/config.toml",
+            &format!(
+                r#"
+                [build]
+                build-dir = "{}"
+                "#,
+                "a".repeat(150)
+            ),
+        )
         .build();
 
     p.cargo("-Zbuild-dir-new-layout build")
